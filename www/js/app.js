@@ -75,7 +75,7 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 	$scope.isCorrect = false;
 	$scope.inGame = false;
 	$scope.generations = [[1,151],[152,251],[252,386],[387,493],[494,649]];
-	$scope.currentGens = [0];
+	$scope.currentGens = [];
 	$scope.block = false;
 	$scope.rounds = [0,0,0,0,0,0,0,0,0,0,0];
 	$scope.resetStatus = function() {
@@ -165,7 +165,7 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 		.success(function (data) {
 			$scope.pokemons = data.pokemons;
 			$scope.pokemons.sort(function(a, b){return a.id-b.id});
-			$scope.initQuiz();
+			// $scope.initQuiz();
 		});
 }]);
 
