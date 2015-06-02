@@ -67,7 +67,6 @@ app.run(function($ionicPlatform) {
 
 app.controller('DataController', ['$scope', 'JsonReaderService', function ($scope, JsonReaderService) {
 	$scope.pokemons = [];
-	$scope.rounds = [0,0,0,0,0,0,0,0,0,0,0];
 	$scope.currentQuestion = {};
 	$scope.darked = true;
 	$scope.waiting = true;
@@ -77,19 +76,30 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 	$scope.inGame = false;
 	$scope.generations = [[1,151],[152,251],[252,386],[387,493],[494,649]];
 	$scope.currentGens = [0];
+	$scope.globalIds = [];
 	$scope.block = false;
 	$scope.currentRound = 0;
+
 	$scope.resetStatus = function() {
 		$scope.lastPokemonId = 0;
 		$scope.correctsCounter = 0;
 		$scope.wrongCounter = 0;
+		$scope.currentRound = 0;
 		$scope.block = false;
+		$scope.rounds = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 	}
 	$scope.resetStatus();
 
+	$scope.restart = function() {
+		$scope.updateIDs();
+		$scope.resetStatus();
+		$scope.randomQuestion();
+	}
+
 	$scope.backToInit = function() {
 		$scope.pageTitle = 'Who is this Pokemón';
-		$scope.inGame = false
+		$scope.inGame = false;
+		$scope.resetStatus();
 	}
 	$scope.randomQuestion = function() {
 		$scope.block = false;
@@ -99,12 +109,10 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 		var tempGen = $scope.currentGens[Math.floor($scope.currentGens.length * Math.random())];
 		var min = $scope.generations[tempGen][0];
 		var max = $scope.generations[tempGen][1];
-		var currentPokemon = Math.floor((max - min) * Math.random()) + min - 1;
-		if(currentPokemon === $scope.lastPokemonId){
-			currentPokemon = Math.floor((max - min) * Math.random()) + min - 1;
-		}
+		var currentPokemon = $scope.globalIds[$scope.currentRound];
 		$scope.currentQuestion.correctPokemon = $scope.pokemons[currentPokemon];
 		$scope.lastPokemonId = currentPokemon;
+		console.log($scope.currentQuestion.correctPokemon)
 		for (var i = 0; i < 3; i++) {
 			var tempRandom = Math.floor((max - min) * Math.random()) + min - 1;
 			if(tempRandom === currentPokemon){
@@ -128,12 +136,24 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 					return;
 				}
 			}
-		};
+		}
 		if(!has){
 			$scope.currentGens.push(targetId);
 		}
-		console.log($scope.currentGens);
-		// id = true;
+		$scope.updateIDs();
+	}
+	$scope.updateIDs = function() {
+		var tempMin = 0;
+		var tempMax = 0;
+		$scope.globalIds = [];
+		for (var i = 0; i < $scope.currentGens.length; i++) {
+			tempMin = $scope.generations[$scope.currentGens[i]][0];
+			tempMax = $scope.generations[$scope.currentGens[i]][1];
+			for (var j = tempMin; j <= tempMax; j++) {
+				$scope.globalIds.push(j);
+			}
+		}
+		$scope.globalIds = shuffle($scope.globalIds);
 	}
 	$scope.initQuiz = function() {
 		$scope.inGame = true;
@@ -143,6 +163,9 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 	}
 
 	$scope.clickQuestion = function(target) {
+		if($scope.block){
+			return
+		}
 		$scope.block = true;
 		if($scope.currentQuestion.correctPokemon.name === target){
 			$scope.isCorrect = true;
@@ -155,14 +178,16 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 			$scope.wrongCounter ++;
 			$scope.rounds[$scope.currentRound] = -1;
 		}
-		console.log($scope.rounds);
-		// $scope.pageTitle = 'Corrects: '+$scope.correctsCounter + ' - Wrongs: '+$scope.wrongCounter;
 		$scope.darked = false;
 		$scope.waiting = false;
 		setTimeout(function(){
 			$scope.$apply(function(){
-				$scope.randomQuestion();
 				$scope.currentRound ++;
+				if($scope.currentRound >= $scope.rounds.length){
+					$scope.backToInit();
+				}else{
+					$scope.randomQuestion();
+				}
         	})
 		}, 1000);
 	}
@@ -171,6 +196,7 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 		.success(function (data) {
 			$scope.pokemons = data.pokemons;
 			$scope.pokemons.sort(function(a, b){return a.id-b.id});
+			$scope.updateIDs();
 			$scope.initQuiz();
 		});
 }]);
