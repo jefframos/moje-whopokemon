@@ -16,7 +16,7 @@ $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
 .round-current {
-  background-color: #EEEEEE !important; }
+  background-color: #DDD !important; }
 
 .round-correct {
   background-color: #33cd5f !important; }
@@ -25,7 +25,7 @@ $dark:                            #444 !default;
   background-color: #ef473a !important; }
 
 .round-default {
-  background-color: #fff; }
+  background-color: #EEE; }
 
 .center {
   text-align: center; }
@@ -37,11 +37,12 @@ $dark:                            #444 !default;
   border: none !important; }
 
 .button-size {
-  min-height: 40px !important;
-  max-height: 40px !important;
-  height: 40px !important;
+  min-height: 30px !important;
+  max-height: 30px !important;
+  height: 30px !important;
   display: none;
-  margin: 0; }
+  margin: 2px !important;
+  line-height: 30px !important; }
 
 .active {
   display: block !important;

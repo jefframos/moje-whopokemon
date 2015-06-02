@@ -106,19 +106,26 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 		$scope.darked = true;
 		$scope.waiting = true;
 		$scope.currentQuestion.options = [];
-		var tempGen = $scope.currentGens[Math.floor($scope.currentGens.length * Math.random())];
-		var min = $scope.generations[tempGen][0];
-		var max = $scope.generations[tempGen][1];
+
 		var currentPokemon = $scope.globalIds[$scope.currentRound];
 		$scope.currentQuestion.correctPokemon = $scope.pokemons[currentPokemon];
 		$scope.lastPokemonId = currentPokemon;
 		console.log($scope.currentQuestion.correctPokemon)
-		for (var i = 0; i < 3; i++) {
-			var tempRandom = Math.floor((max - min) * Math.random()) + min - 1;
-			if(tempRandom === currentPokemon){
-				i --;
-			}else{
-				$scope.currentQuestion.options.push($scope.pokemons[tempRandom].name);
+		$scope.currentQuestion.options = [];
+		while($scope.currentQuestion.options.length < 3){
+			var tempRandom = Math.floor($scope.globalIds.length * Math.random());
+			var tempName = $scope.pokemons[tempRandom].name;
+			if(tempName !== $scope.currentQuestion.correctPokemon.name){
+				var pass = true;
+				for (var i = 0; i < $scope.currentQuestion.options.length; i++) {
+					if($scope.currentQuestion.options[i] === tempName){
+						pass = false;
+						break;
+					}
+				}
+				if(pass){
+					$scope.currentQuestion.options.push($scope.pokemons[tempRandom].name);
+				}
 			}
 		}
 		$scope.currentQuestion.options.push($scope.currentQuestion.correctPokemon.name)

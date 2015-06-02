@@ -19,7 +19,7 @@ $dark:                            #444 !default;
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 .round-current{
-	background-color:#EEEEEE!important;
+	background-color:#DDD!important;
 }
 
 .round-correct{
@@ -30,7 +30,7 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 	background-color:#ef473a!important;
 }
 .round-default{
-	background-color:#fff;
+	background-color:#EEE;
 }
 
 .center {
@@ -45,11 +45,12 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 }
 
 .button-size {
-	min-height: 40px!important;
-	max-height: 40px!important;
-	height: 40px!important;
+	min-height: 30px!important;
+	max-height: 30px!important;
+	height: 30px!important;
 	display: none;
-	margin: 0;
+	margin: 2px!important;
+	line-height: 30px!important;
 }
 .active {
 	display: block!important;

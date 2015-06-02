@@ -35,7 +35,7 @@
 
 					<div class="list card center in-game" ng-class="{'deactive':!inGame}">
 						<div class="row" >
-						  <div class="col col round-default" ng-class="{'round-current':currentRound === $index, 'round-correct':round === 1, 'round-wrong':round === -1}" ng-repeat="round in rounds track by $index">{{$index + 1}}</div>
+						  <div class="col col round-default" ng-class="{'round-current':currentRound === $index, 'round-correct':round === 1, 'round-wrong':round === -1}" ng-repeat="round in rounds track by $index"></div>
 						</div>
 						<img class="pokemon-container"  ng-class="{'dark':darked}" src="{{ currentQuestion.correctPokemon.url }}">
 						<button  ng-class="{'active':!waiting , 'button-assertive': !isCorrect , 'button-balanced': isCorrect}" class="button button-block button-size result">{{ resultAnsware }}</button>
