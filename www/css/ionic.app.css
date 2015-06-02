@@ -18,11 +18,18 @@ $dark:                            #444 !default;
 .center {
   text-align: center; }
 
+.toggle-size {
+  min-height: 45px !important;
+  max-height: 45px !important;
+  height: 45px !important;
+  border: none !important; }
+
 .button-size {
   min-height: 40px !important;
   max-height: 40px !important;
   height: 40px !important;
-  display: none; }
+  display: none;
+  margin: 0; }
 
 .active {
   display: block !important;
@@ -46,7 +53,8 @@ $dark:                            #444 !default;
   margin: auto;
   left: 0;
   right: 0;
-  text-align: center; }
+  text-align: center;
+  height: 100px; }
 
 .dark {
   -webkit-filter: brightness(-1);

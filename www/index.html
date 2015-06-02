@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+		<title></title>
+
+
+	<!-- compiled css output -->
+		<link href="css/ionic.app.css" rel="stylesheet">
+
+		<!-- ionic/angularjs js -->
+		<script src="lib/ionic/js/ionic.bundle.js"></script>
+
+		<!-- cordova script (this will be a 404 during development) -->
+		<script src="cordova.js"></script>
+
+		<!-- your app's js -->
+		<script src="js/app.js"></script>
+	</head>
+	<body ng-app="starter">
+
+		<ion-pane>
+			<ion-content>
+				<div ng-controller="DataController">
+				<h3 class="main-color app-name">{{pageTitle}}</h3>
+				<div ng-class="{'deactive':inGame}">
+					<ul class="list">
+						<li class="item-toggle " ng-repeat="gen in generations">
+							<ion-toggle ng-model="genModel" class="toggle-size" toggle-class="toggle-calm" ng-click="checkGen($index ,genModel)">{{$index + 1}} Generation</ion-toggle>
+						</li>
+					</ul>
+					<button  class="button button-block button-positive" ng-click="initQuiz()" ng-class="{'deactive':currentGens.length <= 0}">GO!</button>
+					</div>
+
+					<div class="list card center in-game" ng-class="{'deactive':!inGame}">
+						<div class="row">
+						  <div class="col col-10" ng-repeat="round in rounds">{{$index + 1}}</div>
+						</div>
+						<img class="pokemon-container"  ng-class="{'dark':darked}" src="{{ currentQuestion.correctPokemon.url }}">
+						<button  ng-class="{'active':!waiting , 'button-assertive': !isCorrect , 'button-balanced': isCorrect}" class="button button-block button-size result">{{ resultAnsware }}</button>
+						<div class="buttons-container">
+							<div ng-repeat="question in currentQuestion.options">
+								<button class="button button-block button-positive button-size"  ng-class="{'button-balanced':!waiting && currentQuestion.correctPokemon.name === question}" ng-click="clickQuestion(question)">
+									{{ question }}
+								</button>
+							</div>
+						</div>
+						<button class="button button-dark" ng-click="backToInit()">
+							BACK
+						</button>
+					</div>
+				</div>
+			</ion-content>
+		</ion-pane>
+	</body>
+</html>
