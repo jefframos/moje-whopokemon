@@ -15,6 +15,18 @@ $assertive:                       #ef473a !default;
 $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
+.round-current {
+  background-color: #EEEEEE !important; }
+
+.round-correct {
+  background-color: #33cd5f !important; }
+
+.round-wrong {
+  background-color: #ef473a !important; }
+
+.round-default {
+  background-color: #fff; }
+
 .center {
   text-align: center; }
 

@@ -67,6 +67,7 @@ app.run(function($ionicPlatform) {
 
 app.controller('DataController', ['$scope', 'JsonReaderService', function ($scope, JsonReaderService) {
 	$scope.pokemons = [];
+	$scope.rounds = [0,0,0,0,0,0,0,0,0,0,0];
 	$scope.currentQuestion = {};
 	$scope.darked = true;
 	$scope.waiting = true;
@@ -75,9 +76,9 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 	$scope.isCorrect = false;
 	$scope.inGame = false;
 	$scope.generations = [[1,151],[152,251],[252,386],[387,493],[494,649]];
-	$scope.currentGens = [];
+	$scope.currentGens = [0];
 	$scope.block = false;
-	$scope.rounds = [0,0,0,0,0,0,0,0,0,0,0];
+	$scope.currentRound = 0;
 	$scope.resetStatus = function() {
 		$scope.lastPokemonId = 0;
 		$scope.correctsCounter = 0;
@@ -138,6 +139,7 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 		$scope.inGame = true;
 		$scope.randomQuestion();
 		$scope.pageTitle = '';
+		$scope.currentRound = 0;
 	}
 
 	$scope.clickQuestion = function(target) {
@@ -146,17 +148,21 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 			$scope.isCorrect = true;
 			$scope.resultAnsware = 'CORRECT';
 			$scope.correctsCounter ++;
+			$scope.rounds[$scope.currentRound] = 1;
 		}else{
 			$scope.isCorrect = false;
 			$scope.resultAnsware = 'WRONG';
 			$scope.wrongCounter ++;
+			$scope.rounds[$scope.currentRound] = -1;
 		}
-		$scope.pageTitle = 'Corrects: '+$scope.correctsCounter + ' - Wrongs: '+$scope.wrongCounter;
+		console.log($scope.rounds);
+		// $scope.pageTitle = 'Corrects: '+$scope.correctsCounter + ' - Wrongs: '+$scope.wrongCounter;
 		$scope.darked = false;
 		$scope.waiting = false;
 		setTimeout(function(){
 			$scope.$apply(function(){
 				$scope.randomQuestion();
+				$scope.currentRound ++;
         	})
 		}, 1000);
 	}
@@ -165,7 +171,7 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 		.success(function (data) {
 			$scope.pokemons = data.pokemons;
 			$scope.pokemons.sort(function(a, b){return a.id-b.id});
-			// $scope.initQuiz();
+			$scope.initQuiz();
 		});
 }]);
 
