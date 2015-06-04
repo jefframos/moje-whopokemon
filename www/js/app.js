@@ -71,6 +71,20 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 	$scope.interval = 0;
 	$scope.maxTime = 90;
 
+
+	// for (var i = 0; i < $scope.generations.length; i++) {
+	// 		tempHigh = APP.cookieManager.getSafeCookie('highscores'+i);
+	// 		if(tempHigh){
+	// 			tempHigh = tempHigh.split(',');
+	// 			for (var j = 0; j < tempHigh.length; j++) {
+	// 				if(LEVELS[i][j]){
+	// 					LEVELS[i][j][1].highscore = parseInt(tempHigh[j]);
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+		
+
 	$scope.resetStatus = function() {
 		$scope.lastPokemonId = 0;
 		$scope.currentRound = 0;
