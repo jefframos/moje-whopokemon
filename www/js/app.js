@@ -23,43 +23,31 @@ app.run(function($ionicPlatform) {
   	if(!window.cordova){
   		return;
   	}
-	// Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-	// for form inputs)
-	if(window.cordova && window.cordova.plugins.Keyboard) {
-	  cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-	}
-	if(window.StatusBar) {
-	  StatusBar.styleDefault();
-	}
-
 	var admobid = {};
-		if( /(android)/i.test(navigator.userAgent) ) {
-			admobid = {
-				banner: 'ca-app-pub-9306461054994106/8419773176',
-				interstitial: 'ca-app-pub-9306461054994106/9896506375',
-			};
-		} else if(/(ipod|iphone|ipad)/i.test(navigator.userAgent)) {
-			admobid = {
-				banner: 'ca-app-pub-9306461054994106/3989573573',
-				interstitial: 'ca-app-pub-9306461054994106/5466306778',
-			};
-		} else {
-			admobid = {
-				banner: 'ca-app-pub-9306461054994106/2770192371',
-				interstitial: 'ca-app-pub-9306461054994106/4246925578',
-			};
-		}
-		if(AdMob){
-			if(window.localStorage.getItem('first')){
-				AdMob.prepareInterstitial( {adId:admobid.interstitial, autoShow:true} );
-				// AdMob.showInterstitial();
-			}else{
-				window.localStorage.setItem('first', 1);
-			}
-			// AdMob.prepareInterstitial( {adId:admobid.interstitial, autoShow:false} );
-			// AdMob.showInterstitial();
-			AdMob.createBanner( {adId: admobid.banner,position: AdMob.AD_POSITION.BOTTOM_CENTER,autoShow: true,adSize:AdMob.AD_SIZE.FULL_BANNER} );
-		}
+	if( /(android)/i.test(navigator.userAgent) ) {
+		admobid = {
+			banner: 'ca-app-pub-9306461054994106/8419773176',
+			interstitial: 'ca-app-pub-9306461054994106/9896506375',
+		};
+	} else if(/(ipod|iphone|ipad)/i.test(navigator.userAgent)) {
+		admobid = {
+			banner: 'ca-app-pub-9306461054994106/3989573573',
+			interstitial: 'ca-app-pub-9306461054994106/5466306778',
+		};
+	} else {
+		admobid = {
+			banner: 'ca-app-pub-9306461054994106/2770192371',
+			interstitial: 'ca-app-pub-9306461054994106/4246925578',
+		};
+	}
+	if(AdMob){
+		AdMob.prepareInterstitial( {adId:admobid.interstitial, autoShow:false} );
+		AdMob.createBanner( {adId: admobid.banner,position: AdMob.AD_POSITION.BOTTOM_CENTER,autoShow: true,adSize:AdMob.AD_SIZE.FULL_BANNER} );
+		document.addEventListener('onAdLoaded', function(data){});
+        document.addEventListener('onAdPresent', function(data){});
+        document.addEventListener('onAdLeaveApp', function(data){});
+        document.addEventListener('onAdDismiss', function(data){});
+	}
 
 
   });
@@ -74,19 +62,22 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 	$scope.pageTitle = 'Who is this Pokemón';
 	$scope.isCorrect = false;
 	$scope.inGame = false;
+	$scope.gameStatus = 0;
 	$scope.generations = [[1,151],[152,251],[252,386],[387,493],[494,649]];
 	$scope.currentGens = [0];
 	$scope.globalIds = [];
 	$scope.block = false;
 	$scope.currentRound = 0;
+	$scope.interval = 0;
+	$scope.maxTime = 90;
 
 	$scope.resetStatus = function() {
 		$scope.lastPokemonId = 0;
-		$scope.correctsCounter = 0;
-		$scope.wrongCounter = 0;
 		$scope.currentRound = 0;
+		$scope.time = $scope.maxTime;
 		$scope.block = false;
-		$scope.rounds = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+		$scope.points = 0;
+		$scope.ableMore = true;
 	}
 	$scope.resetStatus();
 
@@ -99,6 +90,7 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 	$scope.backToInit = function() {
 		$scope.pageTitle = 'Who is this Pokemón';
 		$scope.inGame = false;
+		$scope.gameStatus = 0;
 		$scope.resetStatus();
 	}
 	$scope.randomQuestion = function() {
@@ -164,11 +156,32 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 	}
 	$scope.initQuiz = function() {
 		$scope.inGame = true;
+		$scope.gameStatus = 1;
 		$scope.randomQuestion();
 		$scope.pageTitle = '';
 		$scope.currentRound = 0;
+		clearInterval($scope.interval);
+		$scope.interval = setInterval(function(){
+			$scope.$apply(function(){
+				$scope.time --;
+				if($scope.time <= 0){
+					clearInterval($scope.interval);
+					$scope.endGame();
+				}
+			})
+		},1000);
 	}
 
+	$scope.more30 = function() {
+		$scope.ableMore = false;
+		$scope.time += 30;
+		if(window.cordova && AdMob){
+			AdMob.showInterstitial();
+		}
+	}
+	$scope.endGame = function() {
+		$scope.backToInit();
+	}
 	$scope.clickQuestion = function(target) {
 		if($scope.block){
 			return
@@ -177,24 +190,21 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 		if($scope.currentQuestion.correctPokemon.name === target){
 			$scope.isCorrect = true;
 			$scope.resultAnsware = 'CORRECT';
-			$scope.correctsCounter ++;
-			$scope.rounds[$scope.currentRound] = 1;
+			$scope.points += 5;
 		}else{
 			$scope.isCorrect = false;
 			$scope.resultAnsware = 'WRONG';
-			$scope.wrongCounter ++;
-			$scope.rounds[$scope.currentRound] = -1;
+			$scope.points -= 5;
+			if($scope.points < 0){
+				$scope.points = 0;
+			}
 		}
 		$scope.darked = false;
 		$scope.waiting = false;
 		setTimeout(function(){
 			$scope.$apply(function(){
 				$scope.currentRound ++;
-				if($scope.currentRound >= $scope.rounds.length){
-					$scope.backToInit();
-				}else{
-					$scope.randomQuestion();
-				}
+				$scope.randomQuestion();
         	})
 		}, 1000);
 	}

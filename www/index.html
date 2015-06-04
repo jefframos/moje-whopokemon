@@ -6,7 +6,7 @@
 		<title></title>
 
 
-	<!-- compiled css output -->
+		<!-- compiled css output -->
 		<link href="css/ionic.app.css" rel="stylesheet">
 
 		<!-- ionic/angularjs js -->
@@ -24,7 +24,7 @@
 			<ion-content>
 				<div ng-controller="DataController">
 				<h3 class="main-color app-name">{{pageTitle}}</h3>
-				<div ng-class="{'deactive':inGame}">
+				<div ng-class="{'deactive':gameStatus !== 0}">
 					<ul class="list">
 						<li class="item-toggle " ng-repeat="gen in generations">
 							<ion-toggle ng-model="genModel" class="toggle-size" toggle-class="toggle-calm" ng-checked="genModel===$index" ng-click="checkGen($index ,genModel)">{{$index + 1}} Generation</ion-toggle>
@@ -33,7 +33,7 @@
 					<button  class="button button-block button-positive" ng-click="initQuiz()" ng-class="{'deactive':currentGens.length <= 0}">GO!</button>
 					</div>
 
-					<div class="list card center in-game" ng-class="{'deactive':!inGame}">
+					<div class="list card center in-game" ng-class="{'deactive':gameStatus !== 1}">
 						<div class="row" >
 						  <div class="col col round-default" ng-class="{'round-current':currentRound === $index, 'round-correct':round === 1, 'round-wrong':round === -1}" ng-repeat="round in rounds track by $index"></div>
 						</div>
@@ -52,6 +52,11 @@
 						<button class="button button-dark" ng-click="restart()">
 							Restart
 						</button>
+						<button class="button button-dark" ng-class="{'deactive':!ableMore}" ng-click="more30()">
+							More 30
+						</button>
+						<h3 class="main-color app-name">{{time}}</h3>
+						<h3 class="main-color app-name">{{points}}</h3>
 					</div>
 				</div>
 			</ion-content>
