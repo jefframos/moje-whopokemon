@@ -17,6 +17,50 @@ $dark:                            #444 !default;
 
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
+.radial {
+	background: url(../img/radial.png) no-repeat transparent !important;
+	background-position: center !important;
+}
+
+.white-back-ico{
+	background: url(../img/white-back.png) no-repeat transparent !important;
+	width: 26px!important;
+	height: 48px!important;
+	max-height: 48px!important;
+}
+
+.white-refresh-ico{
+	background: url(../img/white-refresh.png) no-repeat transparent !important;
+	width: 58px!important;
+	height: 55px!important;
+	max-height: 55px!important;
+	max-width: 58px!important;
+}
+
+
+.red-back-ico{
+	background: url(../img/red-back.png) no-repeat transparent !important;
+	width: 26px!important;
+	height: 48px!important;
+	max-height: 48px!important;
+}
+
+.red-refresh-ico{
+	background: url(../img/red-refresh.png) no-repeat transparent !important;
+	width: 58px!important;
+	height: 55px!important;
+	max-height: 55px!important;
+	max-width: 58px!important;
+}
+
+.pane {
+	background: url(../img/pattern.png) repeat #0e4351 !important
+}
+.card {
+	background: transparent !important;
+	box-shadow: none !important;
+	margin: 0 !important;
+}
 
 .round-current{
 	background-color:#DDD!important;
@@ -44,6 +88,53 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 	border:none!important;
 }
 
+.buttons-container {
+	padding: 0 40px;
+}
+
+.stop, .restart {
+	position: absolute !important;
+	width: 50px;
+	height: 50px;
+	top: 0px;
+	left: 40px;
+	color: white !important;
+	font-size: 34px !important;
+}
+.stop{
+	top: 2px;
+}
+
+.restart {
+	left: 100px;
+}
+
+.points {
+	position: absolute;
+	width: 50px;
+	height: 50px;
+	top: 30px;
+	right: 28px;
+	margin-left: -25px;
+	line-height: 50px;
+	font-size: 20px;
+	font-family: 'Chewy' !important;
+	color: white;
+}
+
+.time {
+	position: absolute;
+	width: 50px;
+	height: 50px;
+	background: #d85054;
+	top: -20px;
+	right: 40px;
+	line-height: 50px;
+	font-family: 'Chewy' !important;
+	color: white;
+	border-radius: 50%;
+}
+
 .button-size {
 	min-height: 30px!important;
 	max-height: 30px!important;
@@ -61,22 +152,161 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 .in-game {
 	transition: all 350ms ease;
 }
+
+.end-game {
+	transition: all 350ms ease;
+}
+
+.end-game-modal {
+	background-color: #f6f4f7 !important;
+	box-shadow: 0 4px 0 #dfe2e7 !important;
+	border-radius: 5px !important;
+	font-family: 'Chewy' !important;
+	color: #676767 !important;
+	line-height: 40px !important;
+	position: relative;
+	border: 0 !important;
+	text-align: center;
+	width: 80%;
+	margin: auto;
+	h1{
+		color: #676767 !important;
+		font-family: 'Chewy' !important;
+		font-size: 20px;
+		padding-top: 30px;
+	}
+	h2{
+		color: #676767 !important;
+		font-family: 'Chewy' !important;
+		font-size: 50px;
+		padding-top: 10px;
+	}
+	.stop{
+		color: #FF5F64!important;
+		position: relative !important;
+		width: 50px !important;
+		top: 0!important;
+		height: 50px !important;
+		bottom: 40px !important;
+		left: -30px !important;
+		font-size: 34px !important;
+		margin-bottom: 20px;
+		margin-top: 20px;
+	}
+	.restart{
+		position: relative !important;
+		top: 0!important;
+		bottom: 40px !important;
+		left: 30px !important;
+		margin-bottom: 20px;
+		margin-top: 20px;
+	}
+}
+
 .deactive {
 	display: none!important;
 	opacity:0!important;
 	transition: all 350ms ease;
 }
-.result {
-	opacity:0;
-	pointer-events: none;
-	transition: all 350ms ease;
-}
+
 .pokemon-container {
-	margin:auto;
+	margin: 30px auto 0;
 	left: 0;
 	right: 0;
 	text-align: center;
 	height: 100px;
+}
+.list {
+	margin: 0 40px;
+}
+.item-toggle {
+	padding-right: 0 !important;
+}
+.item-toggle .toggle {
+	top: 5px !important;
+	right: 5px !important;
+}
+.toggle input:checked + .track .handle {
+	display: none!important;
+}
+.toggle.toggle-calm input:checked + .track {
+	background: #ff595e !important;
+}
+.toggle .handle {
+	box-shadow: 0 0 0 !important;
+	background: #dfe2e7 !important;
+	border: 1px solid #dfe2e7 !important;
+}
+.toggle .track {
+	width: 31px !important;
+	box-shadow: 0 0 0 !important;
+	border-color: transparent !important;
+	background: #dfe2e7 !important;
+}
+.app-name {
+	font-family: 'Chewy' !important;
+	color: white;
+	text-align: center;
+	padding: 50px 0;
+}
+.button-question {
+	background-color: #f6f4f7 !important;
+	box-shadow: 0 4px 0 #dfe2e7 !important;
+	margin: 0 0 10px !important;
+	border-radius: 5px !important;
+	font-family: 'Chewy' !important;
+	color: #676767 !important;
+	line-height: 40px !important;
+	height: 40px !important;
+	max-height: 40px !important;
+	position: relative;
+	border: 0 !important;
+	.item {
+		background: transparent;
+		padding: 0 0 0 20px !important;
+		width: 100%;
+	}
+	&.result {
+		margin: 0 0 20px !important;
+		border-radius: 0 !important;
+		opacity:0;
+		pointer-events: none;
+		transition: all 350ms ease;
+	}
+	&.activated {
+		opacity: 1 !important;
+		top: 2px !important;
+		box-shadow: 0 2px 0 #dfe2e7 !important;
+	}
+	&.correct {
+		background: #4db76d !important;
+		box-shadow: 0 4px 0 #277a4c !important;
+		color: white !important;
+	}
+	&.wrong {
+		background: #ff5e63 !important;
+		box-shadow: 0 4px 0 #d34e52 !important;
+		color: white !important;
+	}
+}
+
+.button-more {
+	background-color: #965EFF !important;
+	box-shadow: 0 4px 0 #663FAD !important;
+	margin: 0 0 10px !important;
+	border-radius: 5px !important;
+	font-family: 'Chewy' !important;
+	color: #FFF !important;
+	line-height: 40px !important;
+	height: 40px !important;
+	max-height: 40px !important;
+	position: relative;
+	border: 0 !important;
+	.item {
+		background: transparent;
+		padding: 0 0 0 20px !important;
+		width: 100%;
+	}
 }
 .dark{
 	-webkit-filter: brightness(-1);/* safari/chrome */

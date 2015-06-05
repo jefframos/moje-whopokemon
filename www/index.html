@@ -5,6 +5,7 @@
 		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
 		<title></title>
 
+		<link href='http://fonts.googleapis.com/css?family=Chewy' rel='stylesheet' type='text/css'>
 
 		<!-- compiled css output -->
 		<link href="css/ionic.app.css" rel="stylesheet">
@@ -22,15 +23,15 @@
 
 		<ion-pane>
 			<ion-content>
-				<div ng-controller="DataController">
+				<div class="radial" ng-controller="DataController">
 				<h3 class="main-color app-name">{{pageTitle}}</h3>
 				<div ng-class="{'deactive':gameStatus !== 0}">
 					<ul class="list">
-						<li class="item-toggle " ng-repeat="gen in generations">
-							<ion-toggle ng-model="genModel" class="toggle-size" toggle-class="toggle-calm" ng-checked="genModel===$index" ng-click="checkGen($index ,genModel)">{{$index + 1}} Generation</ion-toggle>
+						<!-- <li class="item-toggle button-question" ng-repeat="gen in generations"> -->
+						<li class="button button-block button-clear button-size button-question" ng-repeat="gen in generations" ng-click="checkGen($index ,genModel)">
+							{{$index + 1}} Generation  {{scores[$index]}} {{gen[2]}}
 						</li>
 					</ul>
-					<button  class="button button-block button-positive" ng-click="initQuiz()" ng-class="{'deactive':currentGens.length <= 0}">GO!</button>
 					</div>
 
 					<div class="list card center in-game" ng-class="{'deactive':gameStatus !== 1}">
@@ -38,25 +39,33 @@
 						  <div class="col col round-default" ng-class="{'round-current':currentRound === $index, 'round-correct':round === 1, 'round-wrong':round === -1}" ng-repeat="round in rounds track by $index"></div>
 						</div>
 						<img class="pokemon-container"  ng-class="{'dark':darked}" src="{{ currentQuestion.correctPokemon.url }}">
-						<button  ng-class="{'active':!waiting , 'button-assertive': !isCorrect , 'button-balanced': isCorrect}" class="button button-block button-size result">{{ resultAnsware }}</button>
+
+						<button  ng-class="{'active':!waiting , 'wrong': !isCorrect , 'correct': isCorrect}" class="button button-block button-size button-question result">{{ resultAnsware }}</button>
+
 						<div class="buttons-container">
 							<div ng-repeat="question in currentQuestion.options">
-								<button class="button button-block button-positive button-size"  ng-class="{'button-balanced':!waiting && currentQuestion.correctPokemon.name === question}" ng-click="clickQuestion(question)">
+								<button class="button button-block button-clear button-size button-question"  ng-class="{'correct':!waiting && currentQuestion.correctPokemon.name === question}" ng-click="clickQuestion(question)">
 									{{ question }}
 								</button>
 							</div>
 						</div>
-						<button class="button button-dark" ng-click="backToInit()">
-							Back
+						<button class="button button-clear white-back-ico stop" ng-click="backToInit()"></button>
+						<button class="button button-clear white-refresh-ico restart" ng-click="restart()"></button>
+						<button class="button button-block button-clear button-size button-more" ng-class="{'deactive':!ableMore}" ng-click="more30()">
+							More 30 seconds
 						</button>
-						<button class="button button-dark" ng-click="restart()">
-							Restart
-						</button>
-						<button class="button button-dark" ng-class="{'deactive':!ableMore}" ng-click="more30()">
-							More 30
-						</button>
-						<h3 class="main-color app-name">{{time}}</h3>
-						<h3 class="main-color app-name">{{points}}</h3>
+
+						<h3 class="time">{{time}}</h3>
+						<h3 class="points">{{points}}</h3>
+					</div>
+					<div class="end-game" ng-class="{'deactive':gameStatus !== 2}">
+						<div class="end-game-modal">
+							<h1>You Get</h1>
+							<h2>{{points}}</h2>
+							<button  ng-class="{'active':true}" class="button button-block button-size button-question result correct">You unlock a new level</button>
+							<button class="button button-clear red-back-ico stop" ng-click="backToInit()"></button>
+							<button class="button button-clear red-refresh-ico restart" ng-click="restart()"></button>
+						</div>
 					</div>
 				</div>
 			</ion-content>
