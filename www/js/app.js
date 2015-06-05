@@ -64,26 +64,27 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 	$scope.inGame = false;
 	$scope.gameStatus = 0;
 	$scope.generations = [[1,151],[152,251],[252,386],[387,493],[494,649]];
+	$scope.scores = [];
 	$scope.currentGens = [0];
 	$scope.globalIds = [];
 	$scope.block = false;
 	$scope.currentRound = 0;
 	$scope.interval = 0;
-	$scope.maxTime = 90;
+	$scope.maxTime = 5;
 
 
-	// for (var i = 0; i < $scope.generations.length; i++) {
-	// 		tempHigh = APP.cookieManager.getSafeCookie('highscores'+i);
-	// 		if(tempHigh){
-	// 			tempHigh = tempHigh.split(',');
-	// 			for (var j = 0; j < tempHigh.length; j++) {
-	// 				if(LEVELS[i][j]){
-	// 					LEVELS[i][j][1].highscore = parseInt(tempHigh[j]);
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-		
+	for (var i = 0; i < $scope.generations.length; i++) {
+		tempHigh = getSafeCookie('highscores'+i);
+		// console.log(tempHigh)
+		if(tempHigh && parseInt(tempHigh) >= 0 ){
+			$scope.scores.push(parseInt(tempHigh));
+		}else{
+			console.log('override')
+			setSafeCookie('highscores'+i,0);
+		}
+	}
+
+	console.log($scope.scores);
 
 	$scope.resetStatus = function() {
 		$scope.lastPokemonId = 0;
@@ -194,6 +195,9 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 		}
 	}
 	$scope.endGame = function() {
+		// console.log($scope.currentGens[0], $scope.points)
+		$scope.scores[$scope.currentGens[0]] = $scope.points;
+		$scope.saveScore();
 		$scope.backToInit();
 	}
 	$scope.clickQuestion = function(target) {
@@ -223,6 +227,13 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 		}, 1000);
 	}
 
+	$scope.saveScore = function(){
+		for (var i = 0; i < $scope.scores.length; i++) {
+			setSafeCookie('highscores'+i,$scope.scores[i]);
+			console.log($scope.scores[i])
+		}
+	}
+
 	JsonReaderService('pokemons')
 		.success(function (data) {
 			$scope.pokemons = data.pokemons;
@@ -238,6 +249,15 @@ app.factory('JsonReaderService', ['$http', function ($http) {
 	};
 }]);
 
+
+function setSafeCookie(key, value) {
+	window.localStorage.setItem(key, value);
+}
+
+function getSafeCookie(key, callback) {
+	var value = window.localStorage.getItem(key);
+	return value;
+}
 
 function shuffle(array) {
 	var currentIndex = array.length, temporaryValue, randomIndex ;
