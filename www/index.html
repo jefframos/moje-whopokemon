@@ -24,7 +24,7 @@
 		<ion-pane>
 			<ion-content>
 				<div class="radial" ng-controller="DataController">
-				<h3 class="main-color app-name">{{pageTitle}}</h3>
+				<h3 class="main-color app-name" ng-class="{'deactive':pageTitle === ''}">{{pageTitle}}</h3>
 				<div ng-class="{'deactive':gameStatus !== 0}">
 					<ul class="list">
 						<!-- <li class="item-toggle button-question" ng-repeat="gen in generations"> -->

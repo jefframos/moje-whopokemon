@@ -130,7 +130,8 @@ $dark:                            #444 !default;
   transition: all 350ms ease; }
 
 .in-game {
-  transition: all 350ms ease; }
+  transition: all 350ms ease;
+  top: 20px; }
 
 .end-game {
   transition: all 350ms ease; }

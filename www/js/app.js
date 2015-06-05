@@ -176,7 +176,8 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 		$scope.globalIds = shuffle($scope.globalIds);
 	}
 	$scope.initQuiz = function() {
-		$scope.pageTitle = 'Who is this Pokemón';
+		console.log('init')
+		$scope.pageTitle = '';
 		$scope.inGame = true;
 		$scope.gameStatus = 1;
 		$scope.randomQuestion();
