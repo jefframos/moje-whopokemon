@@ -138,20 +138,20 @@ body{
 
 .time {
 	position: absolute;
-	width: 80px;
-	height: 40px;
-	top: 30px;
+	width: 60px;
+	height: 30px;
 	right: 40px;
-	margin-left: -36px;
-	line-height: 43px;
-	font-size: 17px;
+	top: 40px;
+	margin-left: -30px;
+	padding-right: 5px;
+	line-height: 32px;
+	font-size: 15px;
 	font-family: 'brandon_grotesquemedium' !important;
 	color: white;
 	background: #d85054;
 	border-radius: 20px;
-	top: 40px;
 	i{
-		margin-right: 10px;
+		margin-right: 2px;
 		float:left;
 		margin-left: 10px;
 	}
@@ -176,6 +176,19 @@ body{
 .points {
 	position: absolute;
 	width: 80px;
+	height: 35px;
+	background: #4db76d;
+	top: -20px;
+	right: 40px;
+	line-height: 38px;
+	font-family: 'brandon_grotesquemedium' !important;
+	color: white;
+	border-radius: 20px;
+}
+
+.more {
+	position: absolute;
+	width: 80px;
 	height: 40px;
 	background: #4db76d;
 	top: -20px;
@@ -184,7 +197,6 @@ body{
 	font-family: 'brandon_grotesquemedium' !important;
 	color: white;
 	border-radius: 20px;
-
 }
 
 .button-size {
@@ -263,11 +275,11 @@ body{
 }
 
 .pokemon-container {
-	margin: 30px auto 0;
+	margin: 20px auto 12px;
 	left: 0;
 	right: 0;
 	text-align: center;
-	height: 100px;
+	height: 120px;
 }
 .list {
 	margin: 0 40px;
@@ -300,7 +312,7 @@ body{
 	font-family: 'brandon_grotesquemedium' !important;
 	color: white;
 	text-align: center;
-	padding: 50px 0;
+	padding: 20px 0;
 }
 span {
 	text-align: right!important;
@@ -339,6 +351,7 @@ span {
 		margin: 0 0 20px !important;
 		border-radius: 0 !important;
 		opacity:0;
+		display: none;
 		pointer-events: none;
 		transition: all 350ms ease;
 	}

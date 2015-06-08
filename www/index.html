@@ -47,7 +47,9 @@
 						<img class="pokemon-container"  ng-class="{'dark':darked}" src="{{ currentQuestion.correctPokemon.url }}">
 
 						<button  ng-class="{'active':!waiting , 'wrong': !isCorrect , 'correct': isCorrect}" class="button button-block button-size button-question result">{{ resultAnsware }}</button>
-
+						<button class="button button-block button-size button-question result button-more active" ng-class="{'deactive':!ableMore}" ng-click="more30()">
+							More 30 seconds
+						</button>
 						<div class="buttons-container">
 							<div ng-repeat="question in currentQuestion.options">
 								<button class="button button-block button-clear button-size button-question"  ng-class="{'correct':!waiting && currentQuestion.correctPokemon.name === question}" ng-click="clickQuestion(question)">
@@ -57,9 +59,6 @@
 						</div>
 						<button class="button button-clear white-back-ico stop" ng-click="backToInit()"></button>
 						<button class="button button-clear white-refresh-ico restart" ng-click="restart()"></button>
-						<button class="button button-block button-clear button-size button-more" ng-class="{'deactive':!ableMore}" ng-click="more30()">
-							More 30 seconds
-						</button>
 
 						<h3 class="points">{{points}}</h3>
 						<h3 class="time"><i class="icon ion-ios-clock-outline"></i>{{time}}</h3>
@@ -69,8 +68,8 @@
 						<div class="end-game-modal">
 							<h1>You Get</h1>
 							<h2>{{points}}</h2>
+							<h1 ng-class="{'active':newHigh}">New Highscore</h1>
 							<button  ng-class="{'active':unlock}" class="button button-block button-size button-question result correct">You unlock a new level</button>
-							<button  ng-class="{'active':newHigh}" class="button button-block button-clear button-size button-more">New Highscore</button>
 							<button class="button button-clear red-back-ico stop" ng-click="backToInit()"></button>
 							<button class="button button-clear red-refresh-ico restart" ng-click="restart()"></button>
 						</div>

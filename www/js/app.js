@@ -59,18 +59,18 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 	$scope.darked = true;
 	$scope.waiting = true;
 	$scope.resultAnsware = 'CORRECT';
-	$scope.pageTitle = 'Who is this Pokemón';
+	$scope.pageTitle = 'Who is that Pokemón';
 	$scope.isCorrect = false;
 	$scope.inGame = false;
 	$scope.gameStatus = 0;
-	$scope.generations = [[1,151,0],[152,251,5],[252,386,120],[387,493,145],[494,649,400]];
+	$scope.generations = [[1,151,0],[152,251,100],[252,386,180],[387,493,260],[494,649,400]];
 	$scope.scores = [];
 	$scope.currentGens = [0];
 	$scope.globalIds = [];
 	$scope.block = false;
 	$scope.currentRound = 0;
 	$scope.interval = 0;
-	$scope.maxTime = 100;
+	$scope.maxTime = 90;
 	$scope.currentResult = '-';
 
 	$scope.isPause = false;
@@ -98,10 +98,10 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 	}
 	for (var i = 0; i < $scope.generations.length; i++) {
 		tempHigh = getSafeCookie('highscores'+i);
-		// console.log(tempHigh)
 		if(tempHigh && parseInt(tempHigh) >= 0 ){
 			$scope.scores.push(parseInt(tempHigh));
 		}else{
+			$scope.scores.push(0);
 			setSafeCookie('highscores'+i,0);
 		}
 	}
@@ -153,7 +153,7 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 	}
 
 	$scope.backToInit = function() {
-		$scope.pageTitle = 'Who is this Pokemón';
+		$scope.pageTitle = 'Who is that Pokemón?';
 		$scope.inGame = false;
 		$scope.gameStatus = 0;
 		$scope.resetStatus();
@@ -165,13 +165,16 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 		$scope.waiting = true;
 		$scope.currentQuestion.options = [];
 
-		var currentPokemon = $scope.globalIds[$scope.currentRound];
+		if($scope.currentRound > $scope.globalIds.length - 1){
+			$scope.currentRound = 0;
+		}
+		var currentPokemon = $scope.globalIds[$scope.currentRound] - 1;
 		$scope.currentQuestion.correctPokemon = $scope.pokemons[currentPokemon];
 		$scope.lastPokemonId = currentPokemon;
 		$scope.currentQuestion.options = [];
 
 		while($scope.currentQuestion.options.length < 3){
-			var tempRandom = Math.floor($scope.globalIds.length * Math.random()) + $scope.generations[$scope.currentGens[0]][0] - 2;
+			var tempRandom = Math.floor($scope.globalIds.length * Math.random()) + $scope.generations[$scope.currentGens[0]][0] - 1;
 			var tempName = $scope.pokemons[tempRandom].name;
 			if(tempName !== $scope.currentQuestion.correctPokemon.name){
 				var pass = true;
@@ -180,9 +183,11 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 						pass = false;
 						break;
 					}
+					console.log(tempName, $scope.currentQuestion.options[i])
 				}
 				if(pass){
-					$scope.currentQuestion.options.push($scope.pokemons[tempRandom].name);
+					$scope.currentQuestion.options.push(tempName);
+					// $scope.currentQuestion.options.push($scope.pokemons[tempRandom].name);
 				}
 			}
 		}
