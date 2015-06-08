@@ -4,9 +4,6 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
 		<title></title>
-
-		<link href='http://fonts.googleapis.com/css?family=Chewy' rel='stylesheet' type='text/css'>
-
 		<!-- compiled css output -->
 		<link href="css/ionic.app.css" rel="stylesheet">
 
@@ -24,20 +21,29 @@
 		<ion-pane>
 			<ion-content>
 				<div class="radial" ng-controller="DataController">
+				<div ng-class="{'deactive':!isPause}" class="pause-modal" ng-click="unPause()">
+					<button class="button button-block button-clear button-size button-more continue-button" ng-click="unPause()">CONTINUE</button>
+				</div>
 				<h3 class="main-color app-name" ng-class="{'deactive':pageTitle === ''}">{{pageTitle}}</h3>
 				<div ng-class="{'deactive':gameStatus !== 0}">
+					<button  ng-class="{'active':true}" class="button button-block button-size button-question result correct label">{{highscore}} pts</button>
 					<ul class="list">
-						<!-- <li class="item-toggle button-question" ng-repeat="gen in generations"> -->
-						<li class="button button-block button-clear button-size button-question" ng-repeat="gen in generations" ng-click="checkGen($index ,genModel)">
-							{{$index + 1}} Generation  {{scores[$index]}} {{gen[2]}}
+						<li class="button button-block button-clear button-size button-question" ng-class="{'wrong': gen[2] > highscore}" ng-repeat="gen in generations" ng-click="checkGen($index ,genModel, (gen[2] <= highscore))" >
+							<ul>
+								<li class="first-li">LEVEL{{$index + 1}}</li>
+								<li>
+									{{getLevelInfo($index)}}
+								</li>
+							</ul>
 						</li>
 					</ul>
-					</div>
+				</div>
 
 					<div class="list card center in-game" ng-class="{'deactive':gameStatus !== 1}">
 						<div class="row" >
 						  <div class="col col round-default" ng-class="{'round-current':currentRound === $index, 'round-correct':round === 1, 'round-wrong':round === -1}" ng-repeat="round in rounds track by $index"></div>
 						</div>
+						<div class="result-points" ng-class="{'remove-opacity':currentResult == '-', 'add-correct-color':currentResult == '+5', 'add-wrong-color':currentResult == '-5'}">{{currentResult}}</div>
 						<img class="pokemon-container"  ng-class="{'dark':darked}" src="{{ currentQuestion.correctPokemon.url }}">
 
 						<button  ng-class="{'active':!waiting , 'wrong': !isCorrect , 'correct': isCorrect}" class="button button-block button-size button-question result">{{ resultAnsware }}</button>
@@ -55,14 +61,16 @@
 							More 30 seconds
 						</button>
 
-						<h3 class="time">{{time}}</h3>
 						<h3 class="points">{{points}}</h3>
+						<h3 class="time"><i class="icon ion-ios-clock-outline"></i>{{time}}</h3>
+
 					</div>
 					<div class="end-game" ng-class="{'deactive':gameStatus !== 2}">
 						<div class="end-game-modal">
 							<h1>You Get</h1>
 							<h2>{{points}}</h2>
-							<button  ng-class="{'active':true}" class="button button-block button-size button-question result correct">You unlock a new level</button>
+							<button  ng-class="{'active':unlock}" class="button button-block button-size button-question result correct">You unlock a new level</button>
+							<button  ng-class="{'active':newHigh}" class="button button-block button-clear button-size button-more">New Highscore</button>
 							<button class="button button-clear red-back-ico stop" ng-click="backToInit()"></button>
 							<button class="button button-clear red-refresh-ico restart" ng-click="restart()"></button>
 						</div>

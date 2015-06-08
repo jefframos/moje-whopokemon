@@ -63,28 +63,74 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 	$scope.isCorrect = false;
 	$scope.inGame = false;
 	$scope.gameStatus = 0;
-	$scope.generations = [[1,151,0],[152,251,50],[252,386,120],[387,493,250],[494,649,400]];
+	$scope.generations = [[1,151,0],[152,251,5],[252,386,120],[387,493,145],[494,649,400]];
 	$scope.scores = [];
 	$scope.currentGens = [0];
 	$scope.globalIds = [];
 	$scope.block = false;
 	$scope.currentRound = 0;
 	$scope.interval = 0;
-	$scope.maxTime = 90;
+	$scope.maxTime = 100;
+	$scope.currentResult = '-';
 
+	$scope.isPause = false;
 
+	$scope.pause = function() {
+		$scope.isPause = true;
+		if($scope.inGame){
+			clearInterval($scope.interval);
+		}
+	}
+	$scope.unPause = function() {
+		$scope.isPause = false;
+		if($scope.inGame){
+			clearInterval($scope.interval);
+			$scope.interval = setInterval(function(){
+				$scope.$apply(function(){
+					$scope.time --;
+					if($scope.time <= 0){
+						clearInterval($scope.interval);
+						$scope.endGame();
+					}
+				})
+			},1000);
+		}
+	}
 	for (var i = 0; i < $scope.generations.length; i++) {
 		tempHigh = getSafeCookie('highscores'+i);
 		// console.log(tempHigh)
 		if(tempHigh && parseInt(tempHigh) >= 0 ){
 			$scope.scores.push(parseInt(tempHigh));
 		}else{
-			console.log('override')
 			setSafeCookie('highscores'+i,0);
 		}
 	}
+	$scope.updateHighscore = function() {
+		var totHighs = 0;
+		for (var i = 0; i < $scope.generations.length; i++) {
+			if($scope.generations[i][2] <= $scope.highscore)
+			{
+				totHighs ++;
+			}
+		}
+		$scope.highscore = 0;
+		for (var i = 0; i < $scope.scores.length; i++) {
+			$scope.highscore += $scope.scores[i];
+		}
 
-	console.log($scope.scores);
+		var newTotHighs = 0;
+		for (var i = 0; i < $scope.generations.length; i++) {
+			if($scope.generations[i][2] <= $scope.highscore)
+			{
+				newTotHighs ++;
+			}
+		}
+		if(newTotHighs > totHighs){
+			$scope.unlock = true;
+		}
+		console.log(totHighs, newTotHighs);
+	}
+	$scope.updateHighscore();
 
 	$scope.resetStatus = function() {
 		$scope.lastPokemonId = 0;
@@ -93,6 +139,8 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 		$scope.block = false;
 		$scope.points = 0;
 		$scope.ableMore = true;
+		$scope.unlock = false;
+		$scope.newHigh = false;
 	}
 	$scope.resetStatus();
 
@@ -111,6 +159,7 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 		$scope.resetStatus();
 	}
 	$scope.randomQuestion = function() {
+		$scope.currentResult = '-';
 		$scope.block = false;
 		$scope.darked = true;
 		$scope.waiting = true;
@@ -122,7 +171,7 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 		$scope.currentQuestion.options = [];
 
 		while($scope.currentQuestion.options.length < 3){
-			var tempRandom = Math.floor($scope.globalIds.length * Math.random()) + $scope.generations[$scope.currentGens[0]][0] - 1;
+			var tempRandom = Math.floor($scope.globalIds.length * Math.random()) + $scope.generations[$scope.currentGens[0]][0] - 2;
 			var tempName = $scope.pokemons[tempRandom].name;
 			if(tempName !== $scope.currentQuestion.correctPokemon.name){
 				var pass = true;
@@ -140,7 +189,10 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 		$scope.currentQuestion.options.push($scope.currentQuestion.correctPokemon.name)
 		$scope.currentQuestion.options = shuffle($scope.currentQuestion.options);
 	}
-	$scope.checkGen = function(targetId, add) {
+	$scope.checkGen = function(targetId, add, able) {
+		if(!able){
+			return;
+		}
 		// var has = false;
 		// for (var i = 0; i < $scope.currentGens.length; i++) {
 		// 	if($scope.currentGens[i] === targetId){
@@ -158,9 +210,17 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 
 		$scope.currentGens = [targetId];
 
-		console.log($scope.currentGens);
+		// console.log($scope.currentGens);
 		$scope.updateIDs();
 		$scope.initQuiz();
+	}
+	$scope.getLevelInfo = function(id) {
+		// console.log($scope.generations[id][2])
+		if($scope.generations[id][2] <= $scope.highscore){
+			return 'HIGHSCORE '+$scope.scores[id];
+		}else{
+			return 'TO UNLOCK: '+$scope.generations[id][2];
+		}
 	}
 	$scope.updateIDs = function() {
 		var tempMin = 0;
@@ -182,6 +242,11 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 		$scope.gameStatus = 1;
 		$scope.randomQuestion();
 		$scope.currentRound = 0;
+		$scope.startInterval();
+
+	}
+
+	$scope.startInterval = function() {
 		clearInterval($scope.interval);
 		$scope.interval = setInterval(function(){
 			$scope.$apply(function(){
@@ -193,19 +258,20 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 			})
 		},1000);
 	}
-
 	$scope.more30 = function() {
 		$scope.ableMore = false;
 		$scope.time += 30;
 		if(window.cordova && AdMob){
 			AdMob.showInterstitial();
 		}
+		$scope.pause();
 	}
 	$scope.endGame = function() {
 		// console.log($scope.currentGens[0], $scope.points)
 		$scope.pageTitle = 'Congratulations!';
 		if($scope.scores[$scope.currentGens[0]] < $scope.points){
 			$scope.scores[$scope.currentGens[0]] = $scope.points;
+			$scope.newHigh = true;
 			console.log('new high');
 		}
 		$scope.saveScore();
@@ -221,6 +287,7 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 			$scope.isCorrect = true;
 			$scope.resultAnsware = 'CORRECT';
 			$scope.points += 5;
+			$scope.currentResult = '+5';
 		}else{
 			$scope.isCorrect = false;
 			$scope.resultAnsware = 'WRONG';
@@ -228,6 +295,7 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 			if($scope.points < 0){
 				$scope.points = 0;
 			}
+			$scope.currentResult = '-5';
 		}
 		$scope.darked = false;
 		$scope.waiting = false;
@@ -243,6 +311,7 @@ app.controller('DataController', ['$scope', 'JsonReaderService', function ($scop
 		for (var i = 0; i < $scope.scores.length; i++) {
 			setSafeCookie('highscores'+i,$scope.scores[i]);
 		}
+		$scope.updateHighscore();
 	}
 
 	JsonReaderService('pokemons')
