@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget id="com.ionicframework.mojewhopokemon166624" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>Who is that poke?</name>
+  <name>Who is that Poke</name>
   <description>
-				Who is that pokemon quiz
-		</description>
+        Who is that Pokemon Quiz
+    </description>
   <author email="jeffs.ramos@gmail.com" href="http://jefframos.me/">
-			Jeff Ramos
-		</author>
+      Jeff Ramos
+    </author>
   <content src="index.html"/>
   <access origin="*"/>
   <preference name="webviewbounce" value="false"/>
@@ -14,8 +14,6 @@
   <preference name="DisallowOverscroll" value="true"/>
   <preference name="android-minSdkVersion" value="16"/>
   <preference name="BackupWebStorage" value="none"/>
-  <preference name="SplashScreen" value="screen"/>
-  <preference name="SplashScreenDelay" value="3000"/>
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
   </feature>
